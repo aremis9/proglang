@@ -1,0 +1,31 @@
+C-x C-c: Quit Emacs
+
+C-g: Cancel the current action
+
+C-x C-f: Open a file (whether or not it already exists)
+
+C-x C-s: Save a file
+
+C-x C-w: Write a file (probably more familiar to you as Save as...)
+
+
+
+C-w: Cut a highlighted region
+
+M-w: Copy a highlighted region
+
+C-k: Cut (kill) from the cursor to the end of the line
+
+C-y: Paste (yank)
+
+
+C-c C-c:	Interrupt
+
+
+
+C-x C-f: 	Open a file (whether or not it already exists)
+C-c C-s:	Create *sml* buffer (REPL)
+C-d	   :	End REPL
+
+Alt-p  :	Print previous
+Alt-n  :	Print next
