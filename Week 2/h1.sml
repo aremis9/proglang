@@ -45,9 +45,35 @@ fun number_in_months (d: (int * int * int) list, m: int list) =
 	    else number_in_months(d, tl m)
 	end
 
+(* val dates_in_month = fn : (int * int * int) list * int -> (int * int * int) list *)
+fun dates_in_month (d: (int * int * int) list, m: int) =
+    if null d
+    then []
+    else
+	if m = #2 (hd d)
+	then hd d :: dates_in_month(tl d, m)
+	else dates_in_month(tl d, m)
 
+(* val dates_in_months = fn : (int * int * int) list * int list -> (int * int * int) list *)
+fun dates_in_months (d: (int * int * int) list, m: int list) =
+    if null d orelse null m
+    then []
+    else dates_in_month(d, hd m) @ dates_in_months(d, tl m)
+
+(* val get_nth = fn : string list * int -> string *)
+fun get_nth (s: string list, n: int) =
+    if null s
+    then ""
+    else
+	if n = 1
+	then hd s
+	else get_nth(tl s, n - 1)
 			    
-			
+val months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+(* val date_to_string = fn : int * int * int -> string *)
+fun date_to_string (YY: int, MM: int, DD: int) =
+    
 
 
 
