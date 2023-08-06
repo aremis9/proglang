@@ -1,16 +1,5 @@
-(* val is_older = fn : (int * int * int) * (int * int * int) -> bool *)
-(* val number_in_month = fn : (int * int * int) list * int -> int *)
-(* val number_in_months = fn : (int * int * int) list * int list -> int *)
-(* val dates_in_month = fn : (int * int * int) list * int -> (int * int * int) list *)
-(* val dates_in_months = fn : (int * int * int) list * int list -> (int * int * int) list *)
-(* val get_nth = fn : string list * int -> string *)
-(* val date_to_string = fn : int * int * int -> string *)
-(* val number_before_reaching_sum = fn : int * int list -> int *)
-(* val what_month = fn : int -> int *)
-(* val month_range = fn : int * int -> int list *)
-(* val oldest = fn : (int * int * int) list -> (int * int * int) option *)
 
-(* data format: YEAR, MONTH, DAY *)
+(* date format: YEAR, MONTH, DAY *)
 
 (* val is_older = fn : (int * int * int) * (int * int * int) -> bool *)
 fun is_older (d1: (int * int *int), d2: (int * int *int)) =
@@ -68,13 +57,54 @@ fun get_nth (s: string list, n: int) =
 	if n = 1
 	then hd s
 	else get_nth(tl s, n - 1)
-			    
-val months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 (* val date_to_string = fn : int * int * int -> string *)
 fun date_to_string (YY: int, MM: int, DD: int) =
-    
+    let val months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    in
+	get_nth (months, MM) ^ " " ^ Int.toString(DD) ^ ", " ^ Int.toString(YY)
+    end
 
+(* val number_before_reaching_sum = fn : int * int list -> int *)
+fun number_before_reaching_sum (sum: int, nums: int list) =
+    if null nums
+    then 0
+    else
+	if sum <= hd nums
+	then 0
+	else 1 + number_before_reaching_sum (sum - hd nums, tl nums)
 
+(* val what_month = fn : int -> int *)
+fun what_month (day: int) =
+    let val days_in_months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] 
+    in
+	number_before_reaching_sum (day, days_in_months) + 1
+    end
 
-			 
+(* val month_range = fn : int * int -> int list *)
+fun month_range (d1: int, d2: int) =
+    if d1 > d2
+    then []
+    else
+	what_month d1 :: month_range(d1 + 1, d2)
+	
+(* val oldest = fn : (int * int * int) list -> (int * int * int) option *)
+fun oldest (dates: (int * int * int) list) =
+    if null dates
+    then NONE
+    else
+	let
+	    fun oldest_nonempty (dates: (int * int * int) list) =
+		if null (tl dates)
+		then hd dates
+		else let val tl_ans = oldest_nonempty(tl dates)
+		     in
+			 if is_older(hd dates, tl_ans)
+			 then hd dates
+			 else tl_ans
+		     end
+	in
+	    SOME (oldest_nonempty dates)
+	end
+	    
+	
