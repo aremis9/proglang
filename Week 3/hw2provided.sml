@@ -58,8 +58,7 @@ fun similar_names (lsts, {first=x, middle=y, last=z}) =
     
 	
 	     
-	     
-
+	   
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
 datatype suit = Clubs | Diamonds | Hearts | Spades
@@ -71,4 +70,81 @@ datatype move = Discard of card | Draw
 
 exception IllegalMove
 
+
+(* val card_color = fn : card -> color
+   val card_value = fn : card -> int
+   val remove_card = fn : card list * card * exn -> card list
+   val all_same_color = fn : card list -> bool
+   val sum_cards = fn : card list -> int
+   val score = fn : card list * int -> int
+   val officiate = fn : card list * move list * int -> int *)
+	      
 (* put your solutions for problem 2 here *)
+
+fun card_color (suit, rank) =
+    case suit of
+	 Spades => Black 
+       | Clubs  => Black 
+       | _  => Red  
+
+fun card_value (suit, rank) =
+    case rank of
+	Num i => i 
+      | Ace => 11
+      | _ => 10 
+
+fun remove_card (cs, c, e) =
+    case cs of
+	[] => []
+      | c0::cs' =>
+	if c0 = c
+	then cs'
+	else case remove_card(cs', c, e) of
+		 [] => raise e
+	       | x => c0::x
+
+fun all_same_color (cs) =
+    case cs of
+	[] => true
+      | _::[] => true 
+      | head::(neck::rest) => (card_color(head) = card_color(neck) andalso all_same_color(neck::rest))
+
+fun sum_cards (cs) =
+    let
+	fun sum(cs, acc) =
+	    case cs of
+		[] => acc
+	      | c::cs' => sum(cs', (card_value(c) + acc)) 
+    in
+	sum(cs, 0)
+    end
+
+fun score (hc, g) =
+    let val prelim_score =
+	if sum_cards(hc) > g
+	then 3 * (sum_cards(hc) - g)
+	else g - sum_cards(hc)
+    in
+	if all_same_color(hc)
+	then prelim_score div 2
+	else prelim_score
+    end
+	
+fun officiate (cs, moves, g) =
+    let
+	fun game_state(held_cards, move_list, card_list) =
+	    if sum_cards(held_cards) > g
+	    then score(held_cards, g)
+	    else
+		case move_list of
+		    [] => score(held_cards, g)
+		  | m::move' =>
+		    (case m of
+			 Draw =>
+			 (case card_list of
+			      [] => score(held_cards, g)
+			    | (c0,c1)::card_list' => game_state(held_cards @ [(c0,c1)], move', card_list'))
+		       | Discard d => game_state(remove_card(held_cards, d, IllegalMove), move', card_list))
+    in
+	game_state([], moves, cs)
+    end
