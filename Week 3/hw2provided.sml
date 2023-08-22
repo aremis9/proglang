@@ -95,13 +95,11 @@ fun card_value (suit, rank) =
 
 fun remove_card (cs, c, e) =
     case cs of
-	[] => []
+	[] => raise e
       | c0::cs' =>
 	if c0 = c
 	then cs'
-	else case remove_card(cs', c, e) of
-		 [] => raise e
-	       | x => c0::x
+	else c0::remove_card(cs', c, e)
 
 fun all_same_color (cs) =
     case cs of
@@ -144,7 +142,7 @@ fun officiate (cs, moves, g) =
 			 (case card_list of
 			      [] => score(held_cards, g)
 			    | (c0,c1)::card_list' => game_state(held_cards @ [(c0,c1)], move', card_list'))
-		       | Discard d => game_state(remove_card(held_cards, d, IllegalMove), move', card_list))
+		       | Discard d => game_state(remove_card(held_cards, d, IllegalMove), move', card_list)) (*add case to check if held_cards is empty*)
     in
 	game_state([], moves, cs)
     end
