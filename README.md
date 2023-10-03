@@ -1,6 +1,6 @@
 # proglang
 Programming Languages\
-University of Washington - Coursera\
+University of Washington - Coursera
 
 - [x] Part A: https://www.coursera.org/learn/programming-languages
 - [ ] Part B: https://www.coursera.org/learn/programming-languages-part-b
