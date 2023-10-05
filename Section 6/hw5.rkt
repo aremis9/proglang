@@ -55,15 +55,15 @@
                        (int-num v2)))
                (error "MUPL addition applied to non-number")))]
         [(fun? e)
-         (closure (env e))]
+         (closure env e)]
         [(ifgreater? e)
          (let ([v1 (eval-under-env (ifgreater-e1 e) env)]
                [v2 (eval-under-env (ifgreater-e2 e) env)])
            (if (and (int? v1)
                     (int? v2))
                (if (> (int-num v1) (int-num v2))
-                   (ifgreater-e3 e)
-                   (ifgreater-e4 e))
+                   (eval-under-env (ifgreater-e3 e) env)
+                   (eval-under-env (ifgreater-e4 e) env))
                (error "MUPL ifgreater applied to non-number")))]
         [(mlet? e)
          (let ([v (eval-under-env (mlet-e e) env)])
@@ -72,13 +72,14 @@
          (let ([clos (eval-under-env (call-funexp e) env)]
                [actual (eval-under-env (call-actual e) env)])
            (if (closure? clos)
-               (let ([nameopt (fun-nameopt (closure-fun clos))]
-                     [formal (fun-formal (closure-fun clos))]
-                     [body (fun-body (closure-fun clos))])
-                 (eval-under-env body (append (if nameopt
-                                                  (list (cons nameopt clos))
-                                                  null)
-                                              (cons (cons formal actual) (closure-env clos)))))
+               (let ([fx (closure-fun clos)]
+                     [arg (eval-under-env (call-actual e) env)])
+                 (if (fun-nameopt fx)
+                      (eval-under-env (fun-body fx) (cons (cons (fun-nameopt fx) clos)
+                                                          (cons (cons (fun-formal fx) arg)
+                                                                (closure-env clos))))
+                      (eval-under-env (fun-body fx) (cons (cons (fun-formal fx) arg)
+                                                          (closure-env clos)))))
                (error (format "function expression is not a closure!" e))))]
         [(apair? e)
          (let ([v1 (eval-under-env (apair-e1 e) env)]
@@ -127,13 +128,21 @@
 
 ;; Problem 4
 
-(define mupl-map "CHANGE")
-
+(define mupl-map
+  (fun #f "f"
+    (fun "map" "xs"
+         (ifaunit (var "xs")
+             (var "xs")
+             (apair (call (var "f") (fst (var "xs")))
+                    (call (var "map") (snd (var "xs"))))))))
+            
 (define mupl-mapAddN 
   (mlet "map" mupl-map
-        "CHANGE (notice map is now in MUPL scope)"))
-
-
+        (fun #f "i"
+             (fun #f "xs"
+                  (call (call (var "map")
+                              (fun #f "x" (add (var "i") (var "x"))))
+                        (var "xs"))))))
 
 ;;; Challenge Problem
 ;
