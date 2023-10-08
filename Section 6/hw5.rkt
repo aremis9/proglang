@@ -121,10 +121,11 @@
 
 
 (define (ifeq e1 e2 e3 e4)
-  (mlet* (list (cons "_x" e1)(cons "_y" e2))
-         (if (equal? (var "_y") (var "_x"))
-             e3
-             e4)))
+  (mlet "_x" e1
+        (mlet "_y" e2
+              (if (equal? (var "_y") (var "_x"))
+                  e3
+                  e4))))
 
 ;; Problem 4
 
