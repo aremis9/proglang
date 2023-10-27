@@ -27,11 +27,9 @@ class MyPiece < Piece
     # class method to choose the next piece
     def self.next_piece (board)
         if board.cheat
-            print "here\n"
             board.cheat = false
             MyPiece.new([[[0, 0]]], board)
         else
-            print "here no cheat\n"
             MyPiece.new(All_My_Pieces.sample, board)
         end
     end
@@ -77,13 +75,9 @@ class MyBoard < Board
     end
 
     def cheated
-        print @cheat
-        if @cheat == false
+        if @score >= 100 and @cheat == false
+            @score -= 100
             @cheat = true
-            if @score >= 100
-                @score -= 100
-                # @game.update_score
-            end
         end
     end
 end
