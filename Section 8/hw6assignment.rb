@@ -11,15 +11,8 @@ class MyPiece < Piece
 
     # class array holding all the pieces and their rotations
     
-    All_My_Pieces = [[[[0, 0], [1, 0], [0, 1], [1, 1]]],  # square (only needs one)
-                    rotations([[0, 0], [-1, 0], [1, 0], [0, -1]]), # T
-                    [[[0, 0], [-1, 0], [1, 0], [2, 0]], # long (only needs two)
-                    [[0, 0], [0, -1], [0, 1], [0, 2]]],
-                    rotations([[0, 0], [0, -1], [0, 1], [1, 1]]), # L
-                    rotations([[0, 0], [0, -1], [0, 1], [-1, 1]]), # inverted L
-                    rotations([[0, 0], [-1, 0], [0, -1], [1, -1]]), # S
-                    rotations([[0, 0], [1, 0], [0, -1], [-1, -1]]),  # Z
-                    rotations([[-1, 0], [0, 0], [1, 0], [1, 1], [0, 1]]),  # thick L
+    All_My_Pieces = All_Pieces +
+                    [rotations([[-1, 0], [0, 0], [1, 0], [1, 1], [0, 1]]),  # thick L
                     [[[-2, 0], [-1, 0], [0, 0], [1, 0], [2, 0]],  # very long (only needs two)
                     [[0, -2], [0, -1], [0, 0], [0, 1], [0, 2]]],
                     rotations([[0, 0], [0, 1], [1, 0]])]  # short L
