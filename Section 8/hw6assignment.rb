@@ -4,19 +4,51 @@
 # part of your solution.
 
 class MyPiece < Piece
-  # The constant All_My_Pieces should be declared here
+    # The constant All_My_Pieces should be declared here
 
-  # your enhancements here
+    # your enhancements here
 
 end
 
 class MyBoard < Board
-  # your enhancements here
+    # your enhancements here
+
+    def initialize(game)
+        super(game)
+    end
+
+    # rotates the current piece by 180deg
+    def rotate_180
+        if !game_over? and @game.is_running?
+            @current_block.move(0, 0, 1)
+            @current_block.move(0, 0, 1)
+        end
+        draw
+    end
 
 end
 
 class MyTetris < Tetris
-  # your enhancements here
+    # your enhancements here
+
+    def initialize
+        super
+        set_board
+        key_bindings
+    end
+
+    def set_board
+        @canvas = TetrisCanvas.new
+        @board = MyBoard.new(self)
+        @canvas.place(@board.block_size * @board.num_rows + 3,
+                    @board.block_size * @board.num_columns + 6, 24, 80)
+        @board.draw
+    end
+
+    def key_bindings
+        super
+        @root.bind('u', proc {@board.rotate_180})
+    end
 
 end
 
