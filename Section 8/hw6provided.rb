@@ -393,7 +393,7 @@ class Tetris
     # visible to the user.
     def draw_piece (piece, old=nil)
         if old != nil and piece.moved
-        old.each{|block| block.remove}
+            old.each{|block| block.remove}
         end
         size = @board.block_size
         blocks = piece.current_rotation

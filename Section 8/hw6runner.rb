@@ -1,6 +1,7 @@
 # University of Washington, Programming Languages, Homework 6, hw6runner.rb
 
-require_relative './hw6provided'
+# require_relative './hw6provided'
+require_relative './scratch'
 require_relative './hw6assignment'
 
 def runTetris
