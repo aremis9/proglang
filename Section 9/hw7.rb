@@ -203,7 +203,7 @@ class Line < GeometryValue
     end
   end
   def intersectVerticalLine vline
-    Point.new(vline.x, m * x + b)
+    Point.new(vline.x, m * vline.x + b)
   end
   def intersectWithSegmentAsLineResult seg
     seg
@@ -401,7 +401,7 @@ class Shift < GeometryExpression
   end
   
   def eval_prog env 
-    @e.shift(@dx,@dy)
+    @e.eval_prog(env).shift(@dx,@dy)
   end
   def preprocess_prog
     Shift.new(@dx, @dy, @e.preprocess_prog)
