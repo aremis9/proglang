@@ -43,6 +43,10 @@ a3 = a.intersect(Point.new(FOUR,FIVE))
 if not (a3.is_a? NoPoints)
 	puts "Point intersect not working properly"
 end
+a4 = Point.new(ZERO, FIVE).intersect(Line.new(FOUR,FIVE))
+if not (a4.x == ZERO and a4.y == FIVE)
+	puts "Point intersect not working properly"
+end
 
 #Line Tests
 b = Line.new(THREE,FIVE)
@@ -127,6 +131,11 @@ if not ((d5.is_a? NoPoints))
 	puts "LineSegment intersect not working properly"
 end
 
+d6 = d.intersect(Point.new(ONE,TWO))
+if ((d6.is_a? NoPoints))
+	puts "LineSegment intersect not working properly"
+end
+
 #Intersect Tests
 i = Intersect.new(LineSegment.new(-ONE,-TWO,THREE,FOUR), LineSegment.new(THREE,FOUR,-ONE,-TWO))
 i1 = i.preprocess_prog.eval_prog([])
@@ -144,7 +153,7 @@ if not (v.preprocess_prog == v)
 	puts "Var preprocess_prog should return self"
 end
 
-#Let Tests
+# #Let Tests
 l = Let.new("a", LineSegment.new(-ONE,-TWO,THREE,FOUR),
              Intersect.new(Var.new("a"),LineSegment.new(THREE,FOUR,-ONE,-TWO)))
 l1 = l.preprocess_prog.eval_prog([])
