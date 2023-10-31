@@ -197,7 +197,7 @@ fun eval_prog (e,env) =
       | Intersect(e1,e2) => intersect(eval_prog(e1,env), eval_prog(e2, env))
       | Shift(dx,dy,e1) =>
 	(case eval_prog(e1, env) of
-	     NoPoints => e1
+	     NoPoints => NoPoints
 	   | Point(x,y) => Point(x + dx, y + dy)
 	   | Line(m,b) => Line(m, b + dy - (m * dx))
 	   | VerticalLine x => VerticalLine (x + dx)
@@ -208,12 +208,17 @@ fun eval_prog (e,env) =
 (* CHANGE: Add function preprocess_prog of type geom_exp -> geom_exp *)
 fun preprocess_prog(e) =
     case e of
-	LineSegment (x1,y1,x2,y2) => if real_close_point (x1,y1) (x2,y2)
-				     then Point (x1,y1)
+	LineSegment (x1,y1,x2,y2) => if real_close (x1,x2)
+				     then
+					 if real_close(y1,y2)
+					 then Point(x1,y1)
+					 else
+					     if y1 > y2
+					     then LineSegment(x2,y2,x1,y1)
+					     else e
 				     else
-					 if (x1 > x2)
-					    orelse (real_close (x1,x2) andalso y1 > y2)
-					 then LineSegment (x2,y2,x1,y1)
+					 if x1 > x2
+					 then LineSegment(x2,y2,x1,y1)
 					 else e
       | Let (s,e1,e2) => Let (s, preprocess_prog(e1), preprocess_prog(e2))
       | Intersect (e1,e2) => Intersect (preprocess_prog(e1), preprocess_prog(e2))
